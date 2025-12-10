@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import { Product } from "@/data/products";
 import { useCart } from "@/components/cart-context";
 
@@ -8,7 +9,7 @@ export default function ShopPage() {
   const { addToCart } = useCart();
 
   // ----------------------
-  // 20 DUMMY PRODUCTS LIST
+  // PRODUCTS (20 ITEMS)
   // ----------------------
 
   const shopProducts: Product[] = [
@@ -19,8 +20,9 @@ export default function ShopPage() {
       description: "Comfortable premium sofa made for modern Nepalese homes.",
       shortDescription: "Premium soft-touch sofa.",
       price: 34999,
-      category: "Living Room",
-      image: "https://i.pinimg.com/736x/47/c7/01/47c70124b7ae67deefe69ff6c45aaf67.jpg",
+      category: "Sofa",
+      image:
+        "https://i.pinimg.com/736x/47/c7/01/47c70124b7ae67deefe69ff6c45aaf67.jpg",
       colors: ["#d4a373", "#e9ecef"],
     },
     {
@@ -30,8 +32,9 @@ export default function ShopPage() {
       description: "Handcrafted wooden table perfect for living rooms.",
       shortDescription: "Handcrafted wooden table.",
       price: 8999,
-      category: "Living Room",
-      image: "https://i.pinimg.com/736x/c1/dc/e5/c1dce58027d968bbe810740eb21c4007.jpg",
+      category: "Table",
+      image:
+        "https://i.pinimg.com/736x/c1/dc/e5/c1dce58027d968bbe810740eb21c4007.jpg",
       colors: ["#deb887"],
     },
     {
@@ -41,8 +44,9 @@ export default function ShopPage() {
       description: "Warm LED night lamp ideal for cozy bedrooms.",
       shortDescription: "Warm ambient lamp.",
       price: 1999,
-      category: "Bedroom",
-      image: "https://i.pinimg.com/1200x/1d/e8/30/1de83077cf35c3a7daa16f9bd4c84b46.jpg",
+      category: "Lighting",
+      image:
+        "https://i.pinimg.com/1200x/1d/e8/30/1de83077cf35c3a7daa16f9bd4c84b46.jpg",
       colors: ["#f4e1c1"],
     },
     {
@@ -52,8 +56,9 @@ export default function ShopPage() {
       description: "Comfortable office chair with back support.",
       shortDescription: "Premium ergonomic chair.",
       price: 12999,
-      category: "Office",
-      image: "https://i.pinimg.com/1200x/b7/79/97/b77997e5d806d9f56f83c2a0cc8c6935.jpg",
+      category: "Chair",
+      image:
+        "https://i.pinimg.com/1200x/b7/79/97/b77997e5d806d9f56f83c2a0cc8c6935.jpg",
       colors: ["#c9ada7"],
     },
     {
@@ -64,7 +69,8 @@ export default function ShopPage() {
       shortDescription: "Soft premium rug.",
       price: 4999,
       category: "Decor",
-      image: "https://i.pinimg.com/1200x/0b/4c/8e/0b4c8e8d410fb47d831849fb9e590450.jpg",
+      image:
+        "https://i.pinimg.com/1200x/0b/4c/8e/0b4c8e8d410fb47d831849fb9e590450.jpg",
       colors: ["#e7d7c1"],
     },
     {
@@ -74,12 +80,13 @@ export default function ShopPage() {
       description: "Modern work desk perfect for home offices.",
       shortDescription: "Premium office work desk.",
       price: 14999,
-      category: "Office",
-      image: "https://i.pinimg.com/736x/b3/21/e2/b321e2485da40c0dde2685c3a4fdcb56.jpg",
+      category: "Office Desk",
+      image:
+        "https://i.pinimg.com/736x/b3/21/e2/b321e2485da40c0dde2685c3a4fdcb56.jpg",
       colors: ["#c2b280"],
     },
 
-    // Duplicate styles to make up 20 items
+    // Fill up to 20 items
     ...Array.from({ length: 14 }).map((_, i) => ({
       id: 200 + i,
       name: `Premium Furniture Item ${i + 1}`,
@@ -87,11 +94,52 @@ export default function ShopPage() {
       description: "High-quality furniture designed for modern Nepali homes.",
       shortDescription: "Premium crafted furniture.",
       price: 4999 + i * 300,
-      category: "Living Room",
-      image: "https://i.pinimg.com/736x/3c/be/6f/3cbe6f63df78a22d29637e7b47427480.jpg",
+      category: ["Table", "Lighting", "Chair", "Decor", "Sofa", "Office Desk"][
+        i % 6
+      ],
+      image:
+        "https://i.pinimg.com/736x/3c/be/6f/3cbe6f63df78a22d29637e7b47427480.jpg",
       colors: ["#d4a373"],
     })),
   ];
+
+  // ----------------------
+  // SEARCH + FILTER STATES
+  // ----------------------
+
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All");
+  const [priceRange, setPriceRange] = useState("All");
+
+  const categories = [
+    "All",
+    "Sofa",
+    "Table",
+    "Lighting",
+    "Bed",
+    "Office Desk",
+    "Chair",
+    "Decor",
+  ];
+
+  const priceFilters = ["All", "Under 5,000", "5,000 - 15,000", "Above 15,000"];
+
+  // ----------------------
+  // FILTERING LOGIC
+  // ----------------------
+
+  const filteredProducts = shopProducts.filter((p) => {
+    const matchSearch = p.name.toLowerCase().includes(search.toLowerCase());
+    const matchCategory = category === "All" || p.category === category;
+
+    let matchPrice = true;
+    if (priceRange === "Under 5,000") matchPrice = p.price < 5000;
+    if (priceRange === "5,000 - 15,000")
+      matchPrice = p.price >= 5000 && p.price <= 15000;
+    if (priceRange === "Above 15,000") matchPrice = p.price > 15000;
+
+    return matchSearch && matchCategory && matchPrice;
+  });
 
   return (
     <div className="app-container py-10">
@@ -100,9 +148,47 @@ export default function ShopPage() {
         Explore our modern premium furniture collection.
       </p>
 
-      {/* Products Grid */}
+      {/* ----------------------
+          SEARCH + FILTER BAR
+      ---------------------- */}
+      <div className="bg-surface p-4 rounded-xl shadow-card mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+
+        {/* Search Input */}
+        <input
+          placeholder="Search products..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="h-11 px-3 rounded-lg border border-border text-sm"
+        />
+
+        {/* Category Filter */}
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="h-11 px-3 rounded-lg border border-border text-sm"
+        >
+          {categories.map((c) => (
+            <option key={c}>{c}</option>
+          ))}
+        </select>
+
+        {/* Price Filter */}
+        <select
+          value={priceRange}
+          onChange={(e) => setPriceRange(e.target.value)}
+          className="h-11 px-3 rounded-lg border border-border text-sm"
+        >
+          {priceFilters.map((p) => (
+            <option key={p}>{p}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* ----------------------
+          PRODUCTS GRID
+      ---------------------- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {shopProducts.map((product) => (
+        {filteredProducts.map((product) => (
           <div
             key={product.id}
             className="bg-surface rounded-2xl shadow-card p-4 hover:-translate-y-1 transition"
