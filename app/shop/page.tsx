@@ -85,23 +85,20 @@ export default function ShopPage() {
         "https://i.pinimg.com/736x/b3/21/e2/b321e2485da40c0dde2685c3a4fdcb56.jpg",
       colors: ["#c2b280"],
     },
-
-    // Fill up to 20 items
-    ...Array.from({ length: 14 }).map((_, i) => ({
-      id: 200 + i,
-      name: `Premium Furniture Item ${i + 1}`,
-      slug: `premium-item-${i + 1}`,
-      description: "High-quality furniture designed for modern Nepali homes.",
-      shortDescription: "Premium crafted furniture.",
-      price: 4999 + i * 300,
-      category: ["Table", "Lighting", "Chair", "Decor", "Sofa", "Office Desk"][
-        i % 6
-      ],
+    {
+      id: 107,
+      name: "Center Table",
+      slug: "Center Table",
+      description: "Modern work desk perfect for home offices.",
+      shortDescription: "Premium office work desk.",
+      price: 14999,
+      category: "Table",
       image:
-        "https://i.pinimg.com/736x/3c/be/6f/3cbe6f63df78a22d29637e7b47427480.jpg",
-      colors: ["#d4a373"],
-    })),
-  ];
+        "https://i.pinimg.com/1200x/76/5e/49/765e49ef4d72940c51b9b35c751e1946.jpg",
+      colors: ["#c2b280"],
+    },
+
+    
 
   // ----------------------
   // SEARCH + FILTER STATES
@@ -227,3 +224,4 @@ export default function ShopPage() {
     </div>
   );
 }
+
